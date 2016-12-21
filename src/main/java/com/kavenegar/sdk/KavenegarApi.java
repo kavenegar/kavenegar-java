@@ -12,6 +12,7 @@ import com.kavenegar.sdk.excepctions.HttpException;
 import com.kavenegar.sdk.models.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -20,6 +21,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +44,7 @@ public class KavenegarApi {
         return String.format(API_PATH, apiKey, method);
     }
 
-    public  UrlEncodedFormEntity createParams(Object... params) {
+    public UrlEncodedFormEntity createParams(Object... params) {
         try {
             List<NameValuePair> formparams = new ArrayList<>();
             for (int i = 0; i < params.length; i += 2) {
@@ -80,10 +82,12 @@ public class KavenegarApi {
             if (returnJson.get("status").getAsInt() != 200) {
                 throw new ApiException(returnJson.get("message").getAsString(), returnJson.get("status").getAsInt());
             }
-            return returnJson.get("entries");
+            return json.get("entries");
 
-        } catch (Exception ex) {
+        } catch (IOException e1) {
             throw new HttpException("Http Request Exception", 0);
+        } catch (ApiException e2) {
+            throw e2;
         }
     }
 
@@ -91,15 +95,15 @@ public class KavenegarApi {
        Send
     */
 
-    public List<SendResult> send(String sender, List<String> receptor, String message, MessageType type, long date, List<String> localIds) throws BaseException {
+    public List<SendResult> send(String sender, List<String> receptors, String message, MessageType type, long date, List<String> localIds) throws BaseException {
 
         JsonArray entry = execute(getApiPath("sms/send"),
                 "sender", sender,
-                "receptor", StringUtils.join(",", receptor),
+                "receptor", String.join(",", receptors),
                 "message", message,
                 "type", type.getValue(),
                 "date", date,
-                "localid", StringUtils.join(",", localIds)
+                "localid", localIds == null ? "" : String.join(",", localIds)
         ).getAsJsonArray();
 
         List<SendResult> list = new ArrayList<>();
@@ -474,10 +478,10 @@ public class KavenegarApi {
         return new SendResult(json);
     }
 
-
     public SendResult verifyLookup(String receptor, String token, String template) throws BaseException {
         return verifyLookup(receptor, token, "", "", template);
     }
+
 
 
 }
