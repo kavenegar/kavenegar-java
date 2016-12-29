@@ -1,19 +1,18 @@
 #Java SDK
-# <a href="http://kavenegar.com/rest.html">Kavenegar RESTful API Document</a>
+# [Kavenegar RESTful API Document](http://kavenegar.com/rest.html)
 If you need to future information about API document Please visit RESTful Document
 
 ## Installation
-<p>
-First of all, You need to make an account on Kavenegar from <a href="https://panel.kavenegar.com/Client/Membership/Register">Here</a>
-</p>
-<p>
-After that you just need to pick API-KEY up from <a href="http://panel.kavenegar.com/Client/setting/index">My Account</a> section.
-Here You can download the Java SDK <a href="https://github.com/KaveNegar/kavenegar-java/archive/master.zip">Here</a> or just pull it.
-Anyway there is good tutorial about <a href="http://gun.io/blog/how-to-github-fork-branch-and-pull-request/">Pull  request</a>
-</p>
+First of all, You need to make an account on Kavenegar from [Kaveneagr webpage](https://panel.kavenegar.com/Client/Membership/Register)
+
+
+After that you just need to pick API-KEY up from [My Account](http://panel.kavenegar.com/Client/setting/index) section.
+Here You can download the [Java SDK] (https://github.com/KaveNegar/kavenegar-java/archive/master.zip) or just pull it.
+Anyway there is good tutorial about [Pull  request](http://gun.io/blog/how-to-github-fork-branch-and-pull-request/)
+
 
 ## Usage
-Well, There is an example to Send SMS by Java.
+Well,You can see an example of sending SMS through JAVA below . 
 
 ```java
 
@@ -33,36 +32,30 @@ catch (ApiException ex)
 ```
 
 #Contribution
-Bug fixes, docs, and enhancements welcome! Please let us know <a href="mailto:support@kavenegar.com?Subject=SDK" target="_top">support@kavenegar.com</a>
+ Bug fixes, docs, and enhancements welcome!I know that there are so many people do these thingi you're one of the  just please let us know [support@kavenegar.com](mailto:support@kavenegar.com?Subject=SDK)
+
+##  راهنمای فارسی 
+
+### راهنما
+
+در صورتی که مایل هستید راهنمای فارسی کیت توسعه کاوه نگار را مطالعه کنید به صفحه
+[کد ارسال پیامک](http://kavenegar.com/sdk.html) 
+مراجعه کنید.
 
 
+### مستندات
 
-## Persian tutorial / راهنمای فارسی
-<div style="direction:rtl">
-###راهنما
-در صورتی که مایل هستید راهنمای فارسی کیت توسعه کاوه نگار را مطالعه کنید به سفحه
-<a href="http://kavenegar.com/sdk.html">کد ارسال پیامک</a>
-مراجعه کنید
 
-###مستندات
-<p>
 برای مطالعه مستندات کار با
-<a href="http://kavenegar.com"  target="_blank">وب سرویس اس ام اس</a>
-کاوه نگار به سفحه <a href="http://kavenegar.com/rest.html">مستندات</a>مراجعه کنید
-</p>
-###معرفی وب سرویس کاوه نگار
-<p>
-برای مشاهده ویژگی های
-<a href="http://kavenegar.com/%D9%88%D8%A8-%D8%B3%D8%B1%D9%88%DB%8C%D8%B3-%D9%BE%DB%8C%D8%A7%D9%85%DA%A9.html">
-وب سرویس پیامک
-</a>
-کاوه نگار به صفحه  وب سرویس مراجعه نمائید
-</p>
-### ایجاد حساب کاربری
-<p>
-و بالاخره اگر در استفاده از سرویس کاوه نگار مشکلی داشتید یا پیشنهاد همکاری  بود لطفا حتما به ما اطلاع دهید
-<br>
-<a href="mailto:support@kavenegar.com">support@kavenegar.com</a>
+[ وب سرویس اس ام اس](http://kavenegar.com)
+کاوه نگار به صفحه [مستندات](http://kavenegar.com/rest.html)مراجعه کنید
 
-</p>
-</div>
+### معرفی وب سرویس کاوه نگار
+
+برای مشاهده ویژگی های وب سرویس پیامک کاوه نگار به [صفحه  وب سرویس](http://kavenegar.com/%D9%88%D8%A8%D8%B3%D8%B1%D9%88%DB%8C%D8%B3-%D9%BE%DB%8C%D8%A7%D9%85%DA%A9.html)مراجعه نمائید.
+
+### ایجاد حساب کاربری
+
+و بالاخره اگر در استفاده از سرویس کاوه نگار مشکلی داشتید یا پیشنهاد همکاری  بود لطفا حتما به ما اطلاع دهید.
+
+[support@kavenegar.com](mailto:support@kavenegar.com)
