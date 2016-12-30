@@ -33,7 +33,7 @@ catch (ApiException ex)
 
 #Contribution
  Bug fixes, docs, and enhancements welcome!I know that there are so many people do these thingi you're one of the  just please let us know [support@kavenegar.com](mailto:support@kavenegar.com?Subject=SDK)
-<p dir='rtl'>
+<div dir='rtl'>
 
 <h4 id="">راهنمای فارسی</h4>
 <h5 id="-1">راهنما</h5>
@@ -49,4 +49,4 @@ catch (ApiException ex)
 <h5 id="-4">ایجاد حساب کاربری</h5>
 <p>و بالاخره اگر در استفاده از سرویس کاوه نگار مشکلی داشتید یا پیشنهاد همکاری  بود لطفا حتما به ما اطلاع دهید.</p>
 <p><a href="mailto:support@kavenegar.com">support@kavenegar.com</a></p>
-</p>
+</div>
