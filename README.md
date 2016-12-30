@@ -34,29 +34,19 @@ catch (ApiException ex)
 #Contribution
  Bug fixes, docs, and enhancements welcome!I know that there are so many people do these thingi you're one of the  just please let us know [support@kavenegar.com](mailto:support@kavenegar.com?Subject=SDK)
 <p dir='rtl'>
-##  راهنمای فارسی 
 
-### راهنما
-
-در صورتی که مایل هستید راهنمای فارسی کیت توسعه کاوه نگار را مطالعه کنید به صفحه
-[کد ارسال پیامک](http://kavenegar.com/sdk.html) 
-مراجعه کنید.
-
-
-### مستندات
-
-
-برای مطالعه مستندات کار با
-[ وب سرویس اس ام اس](http://kavenegar.com)
-کاوه نگار به صفحه [مستندات](http://kavenegar.com/rest.html)مراجعه کنید
-
-### معرفی وب سرویس کاوه نگار
-
-برای مشاهده ویژگی های وب سرویس پیامک کاوه نگار به [صفحه  وب سرویس](http://kavenegar.com/%D9%88%D8%A8%D8%B3%D8%B1%D9%88%DB%8C%D8%B3-%D9%BE%DB%8C%D8%A7%D9%85%DA%A9.html)مراجعه نمائید.
-
-### ایجاد حساب کاربری
-
-و بالاخره اگر در استفاده از سرویس کاوه نگار مشکلی داشتید یا پیشنهاد همکاری  بود لطفا حتما به ما اطلاع دهید.
-
-[support@kavenegar.com](mailto:support@kavenegar.com)
+<h4 id="">راهنمای فارسی</h4>
+<h5 id="-1">راهنما</h5>
+<p>در صورتی که مایل هستید راهنمای فارسی کیت توسعه کاوه نگار را مطالعه کنید به صفحه
+<a href="http://kavenegar.com/sdk.html">کد ارسال پیامک</a> 
+مراجعه کنید.</p>
+<h5 id="-2">مستندات</h5>
+<p>برای مطالعه مستندات کار با
+<a href="http://kavenegar.com"> وب سرویس اس ام اس</a>
+کاوه نگار به صفحه <a href="http://kavenegar.com/rest.html">مستندات</a>مراجعه کنید</p>
+<h5 id="-3">معرفی وب سرویس کاوه نگار</h5>
+<p>برای مشاهده ویژگی های وب سرویس پیامک کاوه نگار به <a href="http://kavenegar.com/%D9%88%D8%A8%D8%B3%D8%B1%D9%88%DB%8C%D8%B3-%D9%BE%DB%8C%D8%A7%D9%85%DA%A9.html">صفحه  وب سرویس</a>مراجعه نمائید.</p>
+<h5 id="-4">ایجاد حساب کاربری</h5>
+<p>و بالاخره اگر در استفاده از سرویس کاوه نگار مشکلی داشتید یا پیشنهاد همکاری  بود لطفا حتما به ما اطلاع دهید.</p>
+<p><a href="mailto:support@kavenegar.com">support@kavenegar.com</a></p>
 </p>
