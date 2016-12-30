@@ -33,7 +33,7 @@ catch (ApiException ex)
 
 #Contribution
  Bug fixes, docs, and enhancements welcome!I know that there are so many people do these thingi you're one of the  just please let us know [support@kavenegar.com](mailto:support@kavenegar.com?Subject=SDK)
-<div style="direction: rtl ;">
+<p dir='rtl'>
 ##  راهنمای فارسی 
 
 ### راهنما
@@ -59,4 +59,4 @@ catch (ApiException ex)
 و بالاخره اگر در استفاده از سرویس کاوه نگار مشکلی داشتید یا پیشنهاد همکاری  بود لطفا حتما به ما اطلاع دهید.
 
 [support@kavenegar.com](mailto:support@kavenegar.com)
-<div>
+</p>
