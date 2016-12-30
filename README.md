@@ -32,7 +32,8 @@ catch (ApiException ex)
 ```
 
 #Contribution
- Bug fixes, docs, and enhancements welcome!I know that there are so many people do these thingi you're one of the  just please let us know [support@kavenegar.com](mailto:support@kavenegar.com?Subject=SDK)
+ Bug fixes, docs, and enhancements welcome!I know that there are so many people do these thingi you're one of the  just please let us know [support@kavenegar.com](mailto:support@kavenegar.com?Subject=SDK
+ <hr>
 <div dir='rtl'>
 
 <h4 id="">راهنمای فارسی</h4>
