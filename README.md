@@ -27,7 +27,7 @@ allprojects {
 ```
 Step 2<p>Add the dependency</p>
 
-```
+```gardle
 dependencies {
 		compile 'com.github.User:Repo:Tag'
 	}
@@ -36,7 +36,7 @@ dependencies {
 
  Step 1 <p> Add the JitPack repository to your build file </p>
  
-```
+```maven
 <repositories>
 		<repository>
 		    <id>jitpack.io</id>
@@ -46,7 +46,7 @@ dependencies {
 ```
 Step 2<p>Add the dependency</p>
 
-```
+```maven
 <dependency>
 	    <groupId>com.github.User</groupId>
 	    <artifactId>Repo</artifactId>
@@ -57,13 +57,13 @@ Step 2<p>Add the dependency</p>
 
 Step 1 <p> Add the JitPack repository to your build file </p>
  
-```
+```sbt
     resolvers += "jitpack" at "https://jitpack.io"
 
 ```
 Step 2<p>Add the dependency</p>
 
-```
+```sbt
     libraryDependencies += "com.github.User" % "Repo" % "Tag"
 
 ```
@@ -71,14 +71,14 @@ Step 2<p>Add the dependency</p>
 
 Step 1 <p> Add the JitPack repository to your build file </p>
  
-```
+```leiningen
     :repositories [["jitpack" "https://jitpack.io"]]
 
 	}
 ```
 ### Step 2<p>Add the dependency</p>
 
-```
+```leiningen
     :dependencies [[com.github.User/Repo "Tag"]]
 
 ```
