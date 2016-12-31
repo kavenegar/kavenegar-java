@@ -12,12 +12,12 @@ Anyway there is good tutorial about [Pull  request](http://gun.io/blog/how-to-gi
 
 ## To get a Git project into your build:
 
+Add it depent on what you are using .
 
-## gradle
-
- ### Step 1 <p> Add the JitPack repository to your build file </p>
+### gradle
+ Step 1 <p> Add the JitPack repository to your build file </p>
  
-```gradel
+```gradle
 allprojects {
 		repositories {
 			...
@@ -25,16 +25,16 @@ allprojects {
 		}
 	}
 ```
-### Step 2<p>Add the dependency</p>
+Step 2<p>Add the dependency</p>
 
 ```
 dependencies {
 		compile 'com.github.User:Repo:Tag'
 	}
 ```
-## maven
+### maven
 
- ### Step 1 <p> Add the JitPack repository to your build file </p>
+ Step 1 <p> Add the JitPack repository to your build file </p>
  
 ```
 <repositories>
@@ -44,7 +44,7 @@ dependencies {
 		</repository>
 	</repositories>
 ```
-### Step 2<p>Add the dependency</p>
+Step 2<p>Add the dependency</p>
 
 ```
 <dependency>
@@ -53,23 +53,23 @@ dependencies {
 	    <version>Tag</version>
 	</dependency>
 ```
-## sbt
+###  sbt
 
- ### Step 1 <p> Add the JitPack repository to your build file </p>
+Step 1 <p> Add the JitPack repository to your build file </p>
  
 ```
     resolvers += "jitpack" at "https://jitpack.io"
 
 ```
-### Step 2<p>Add the dependency</p>
+Step 2<p>Add the dependency</p>
 
 ```
     libraryDependencies += "com.github.User" % "Repo" % "Tag"
 
 ```
-## leiningen
+### leiningen
 
- ### Step 1 <p> Add the JitPack repository to your build file </p>
+Step 1 <p> Add the JitPack repository to your build file </p>
  
 ```
     :repositories [["jitpack" "https://jitpack.io"]]
