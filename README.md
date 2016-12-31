@@ -12,7 +12,7 @@ Anyway there is good tutorial about [Pull  request](http://gun.io/blog/how-to-gi
 
 ### To get a Git project into your build:
 
-Add it depent on what you are using .
+Add it depend on what you are using .
 
 #### gradle
  Step 1 <p> Add the JitPack repository to your build file </p>
