@@ -10,12 +10,12 @@ After that you just need to pick API-KEY up from [My Account](http://panel.kaven
 Here You can download the [Java SDK] (https://github.com/KaveNegar/kavenegar-java/archive/master.zip) or just pull it.
 Anyway there is good tutorial about [Pull  request](http://gun.io/blog/how-to-github-fork-branch-and-pull-request/)
 
-### To get a Git project into your build:
+## To get a Git project into your build:
 
 
-### gradle
+## gradle
 
- #### Step 1 <p> Add the JitPack repository to your build file </p>
+ ### Step 1 <p> Add the JitPack repository to your build file </p>
  
 ```gradel
 allprojects {
@@ -25,16 +25,16 @@ allprojects {
 		}
 	}
 ```
-#### Step 2<p>Add the dependency</p>
+### Step 2<p>Add the dependency</p>
 
 ```
 dependencies {
 		compile 'com.github.User:Repo:Tag'
 	}
 ```
-### maven
+## maven
 
- #### Step 1 <p> Add the JitPack repository to your build file </p>
+ ### Step 1 <p> Add the JitPack repository to your build file </p>
  
 ```
 <repositories>
@@ -44,7 +44,7 @@ dependencies {
 		</repository>
 	</repositories>
 ```
-#### Step 2<p>Add the dependency</p>
+### Step 2<p>Add the dependency</p>
 
 ```
 <dependency>
@@ -53,30 +53,30 @@ dependencies {
 	    <version>Tag</version>
 	</dependency>
 ```
-### sbt
+## sbt
 
- #### Step 1 <p> Add the JitPack repository to your build file </p>
+ ### Step 1 <p> Add the JitPack repository to your build file </p>
  
 ```
     resolvers += "jitpack" at "https://jitpack.io"
 
 ```
-#### Step 2<p>Add the dependency</p>
+### Step 2<p>Add the dependency</p>
 
 ```
     libraryDependencies += "com.github.User" % "Repo" % "Tag"
 
 ```
-### leiningen
+## leiningen
 
- #### Step 1 <p> Add the JitPack repository to your build file </p>
+ ### Step 1 <p> Add the JitPack repository to your build file </p>
  
 ```
     :repositories [["jitpack" "https://jitpack.io"]]
 
 	}
 ```
-#### Step 2<p>Add the dependency</p>
+### Step 2<p>Add the dependency</p>
 
 ```
     :dependencies [[com.github.User/Repo "Tag"]]
