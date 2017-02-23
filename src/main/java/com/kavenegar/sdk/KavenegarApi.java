@@ -10,7 +10,7 @@ import com.kavenegar.sdk.excepctions.ApiException;
 import com.kavenegar.sdk.excepctions.BaseException;
 import com.kavenegar.sdk.excepctions.HttpException;
 import com.kavenegar.sdk.models.*;
-import org.apache.commons.lang3.StringUtils;
+import com.kavenegar.sdk.utils.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -31,6 +31,7 @@ import java.util.List;
  * @author Kavenegar
  */
 public class KavenegarApi {
+
 
     static final String API_PATH = "https://api.kavenegar.com/v1/%s/%s.json";
 
@@ -99,11 +100,11 @@ public class KavenegarApi {
 
         JsonArray entry = execute(getApiPath("sms/send"),
                 "sender", sender,
-                "receptor", String.join(",", receptors),
+                "receptor", StringUtils.join(",", receptors),
                 "message", message,
                 "type", type.getValue(),
                 "date", date,
-                "localid", localIds == null ? "" : String.join(",", localIds)
+                "localid", localIds == null ? "" : StringUtils.join(",", localIds)
         ).getAsJsonArray();
 
         List<SendResult> list = new ArrayList<>();
