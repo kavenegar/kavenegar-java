@@ -29,7 +29,7 @@ Step 2<p>Add the dependency</p>
 
 ```java
 dependencies {
-		compile 'com.github.User:Repo:Tag'
+	        compile 'com.github.kavenegar:kavenegar-java:v2.0.1'
 	}
 ```
 #### maven
@@ -48,9 +48,9 @@ Step 2<p>Add the dependency</p>
 
 ```java
 <dependency>
-	    <groupId>com.github.User</groupId>
-	    <artifactId>Repo</artifactId>
-	    <version>Tag</version>
+	    <groupId>com.github.kavenegar</groupId>
+	    <artifactId>kavenegar-java</artifactId>
+	    <version>v2.0.1</version>
 	</dependency>
 ```
 ####  sbt
@@ -58,7 +58,7 @@ Step 2<p>Add the dependency</p>
 Step 1 <p> Add the JitPack repository to your build file </p>
  
 ```java
-    resolvers += "jitpack" at "https://jitpack.io"
+	libraryDependencies += "com.github.kavenegar" % "kavenegar-java" % "v2.0.1"	
 
 ```
 Step 2<p>Add the dependency</p>
@@ -79,7 +79,7 @@ Step 1 <p> Add the JitPack repository to your build file </p>
 Step 2<p>Add the dependency</p>
 
 ```java
-    :dependencies [[com.github.User/Repo "Tag"]]
+	:dependencies [[com.github.kavenegar/kavenegar-java "v2.0.1"]]	
 
 ```
 ## Usage
