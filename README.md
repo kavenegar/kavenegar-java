@@ -1,4 +1,4 @@
-# Java-example
+# Kavenegar-Java
 # [Kavenegar RESTful API Document](http://kavenegar.com/rest.html)
 If you need to future information about API document Please visit RESTful Document
 
