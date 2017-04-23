@@ -33,16 +33,25 @@ import java.util.List;
 public class KavenegarApi {
 
 
-    static final String API_PATH = "https://api.kavenegar.com/v1/%s/%s.json";
+    static final String API_PATH = "%s://api.kavenegar.com/v1/%s/%s.json";
 
     private String apiKey;
+    private Boolean safe;
 
     public KavenegarApi(String apiKey) {
         this.apiKey = apiKey;
+        this.safe =Boolean.FALSE;
     }
-
+	
+    public KavenegarApi(String apiKey ,Boolean safe) {
+        this.apiKey = apiKey;
+        this.safe = safe;
+    }
     private String getApiPath(String method) {
-        return String.format(API_PATH, apiKey, method);
+        if(this.safe==Boolean.TRUE)
+            return String.format(API_PATH, "https",apiKey, method);
+        else
+            return String.format(API_PATH, "http",apiKey, method);
     }
 
     public UrlEncodedFormEntity createParams(Object... params) {
