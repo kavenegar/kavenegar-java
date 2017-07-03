@@ -492,8 +492,7 @@ public class KavenegarApi {
         return verifyLookup(receptor, token, "", "", template);
     }
 
-    public List<SendResult> CallMakeTTS(List<String> receptors, String message,  long date, List<String> localIds) throws BaseException {
-
+    public List<SendResult> CallMakeTTS(String message,List<String> receptors,Long date, List<String> localIds) throws BaseException {
         JsonArray entry = execute(getApiPath("call/maketts"),
                 "receptor", StringUtils.join(",", receptors),
                 "message", message,                
@@ -510,39 +509,34 @@ public class KavenegarApi {
         return list;
     }
     
-    public List<SendResult> CallMakeTTS(List<String> receptors, String message,  long date) throws BaseException {
-
-        JsonArray entry = execute(getApiPath("call/maketts"),
-                "receptor", StringUtils.join(",", receptors),
-                "message", message,                
-                "date", date
-                
-        ).getAsJsonArray();
-
-        List<SendResult> list = new ArrayList<>();
-        for (int i = 0; i < entry.size(); i++) {
-            JsonObject json = entry.get(i).getAsJsonObject();
-            SendResult result = new SendResult(json);
-            list.add(result);
-        }
-        return list;
+    public SendResult CallMakeTTS(String message,String receptor) throws BaseException {
+        List<String> receptors = new ArrayList<>();
+        receptors.add(receptor);
+        return CallMakeTTS(message,receptors).get(0);
     }
     
-    public List<SendResult> CallMakeTTS(List<String> receptors, String message) throws BaseException {
-
-        JsonArray entry = execute(getApiPath("call/maketts"),
-                "receptor", StringUtils.join(",", receptors),
-                "message", message                
-        ).getAsJsonArray();
-
-        List<SendResult> list = new ArrayList<>();
-        for (int i = 0; i < entry.size(); i++) {
-            JsonObject json = entry.get(i).getAsJsonObject();
-            SendResult result = new SendResult(json);
-            list.add(result);
-        }
-        return list;
+     public List<SendResult> CallMakeTTS(String message,List<String> receptor) throws BaseException {
+       return CallMakeTTS(message,receptor,null);
     }
-
-
+     
+    public List<SendResult> CallMakeTTS(String message,String receptor,Long date) throws BaseException {
+        List<String> receptors = new ArrayList<>();
+        receptors.add(receptor);
+       return CallMakeTTS(message,receptors,date);
+    }
+    
+    public List<SendResult> CallMakeTTS(String message,List<String> receptor,Long date) throws BaseException {
+       return CallMakeTTS(message,receptor,date,null);
+    }
+    
+     public List<SendResult> CallMakeTTS(String message,List<String> receptor,List<String> localId) throws BaseException {
+       return CallMakeTTS(message,receptor,null,localId);
+    }
+     
+     public List<SendResult> CallMakeTTS(String message,List<String> receptor,String localId) throws BaseException {
+         List<String> localIds = new ArrayList<>();
+        localIds.add(localId);
+       return CallMakeTTS(message,receptor,null,localIds);
+    }
+  
 }
