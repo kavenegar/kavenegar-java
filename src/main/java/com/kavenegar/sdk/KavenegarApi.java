@@ -10,6 +10,7 @@ import com.kavenegar.sdk.excepctions.ApiException;
 import com.kavenegar.sdk.excepctions.BaseException;
 import com.kavenegar.sdk.excepctions.HttpException;
 import com.kavenegar.sdk.models.*;
+import com.kavenegar.sdk.utils.PairValue;
 import com.kavenegar.sdk.utils.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -488,8 +489,20 @@ public class KavenegarApi {
         return new SendResult(json);
     }
     
-    public SendResult verifyLookup(String receptor, String token, String token2, String token3, String template,String token10,String token20) throws BaseException {
+     public SendResult verifyLookup(String receptor, String token, String token2, String token3, String template,List<PairValue> params) throws BaseException {
         String path = getApiPath("verify/lookup");
+        String token10=null;
+        String token20=null;     
+        for (PairValue Key : params) {
+            if (null != Key.getKey()) switch (Key.getKey()) {
+                case "token10":
+                    token10 = Key.getValue();
+                    break;
+                case "token20":
+                    token20 = Key.getValue();
+                    break;
+            }
+        }
         JsonArray array = execute(path, "receptor", receptor, "token", token, "token2", token2, "token3", token3, "template", template,"token10",token10,"token20",token20).getAsJsonArray();
         JsonObject json = array.get(0).getAsJsonObject();
         return new SendResult(json);
