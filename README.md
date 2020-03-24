@@ -89,7 +89,7 @@ Well,You can see an example of sending SMS through JAVA below .
 
 try {
      KavenegarApi  api= new KavenegarApi("");
-      SendResult Result = api.Send("SenderLine", "Your Receptor", "خدمات پیام کوتاه کاوه نگار");
+      SendResult Result = api.send("SenderLine", "Your Receptor", "خدمات پیام کوتاه کاوه نگار");
 }
 catch (HttpException ex)
 { // در صورتی که خروجی وب سرویس 200 نباشد این خطارخ می دهد.
