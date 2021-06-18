@@ -29,7 +29,7 @@ Step 2<p>Add the dependency</p>
 
 ```java
 dependencies {
-	        compile 'com.github.kavenegar:kavenegar-java:v2.0.1'
+	        compile 'com.github.kavenegar:kavenegar-java:v2.0.3'
 	}
 ```
 #### maven
@@ -50,7 +50,7 @@ Step 2<p>Add the dependency</p>
 <dependency>
 	    <groupId>com.github.kavenegar</groupId>
 	    <artifactId>kavenegar-java</artifactId>
-	    <version>v2.0.1</version>
+	    <version>v2.0.3</version>
 	</dependency>
 ```
 ####  sbt
@@ -58,7 +58,7 @@ Step 2<p>Add the dependency</p>
 Step 1 <p> Add the JitPack repository to your build file </p>
  
 ```java
-	libraryDependencies += "com.github.kavenegar" % "kavenegar-java" % "v2.0.1"	
+	libraryDependencies += "com.github.kavenegar" % "kavenegar-java" % "v2.0.3"	
 
 ```
 Step 2<p>Add the dependency</p>
@@ -79,7 +79,7 @@ Step 1 <p> Add the JitPack repository to your build file </p>
 Step 2<p>Add the dependency</p>
 
 ```java
-	:dependencies [[com.github.kavenegar/kavenegar-java "v2.0.1"]]	
+	:dependencies [[com.github.kavenegar/kavenegar-java "v2.0.3"]]	
 
 ```
 ## Usage
