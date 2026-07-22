@@ -1,26 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kavenegar.sdk.excepctions;
-
 
 import com.kavenegar.sdk.enums.MetaData;
 
-/**
- *
- * @author mohsen
- */
-public class ApiException extends BaseException {
-
-    int code;
+public class ApiException extends KavenegarApiException {
 
     public ApiException(String message, int code) {
-        super(message);
-        this.code = code;
+        super(message, code);
     }
 
-    public MetaData getCode() {
-        return MetaData.valueOf(code);
+    public MetaData getMetaData() {
+        return MetaData.valueOf(getRawCode());
     }
 }

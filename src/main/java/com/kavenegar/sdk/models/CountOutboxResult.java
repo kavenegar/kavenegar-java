@@ -1,31 +1,37 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kavenegar.sdk.models;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @author mohsen
- */
-public class CountOutboxResult extends CountInboxResult {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CountOutboxResult {
 
-    private   Long sumPart;
-    private  Long cost;
+    @JsonProperty("sumpart")
+    private long sumPart;
 
+    @JsonProperty("cost")
+    private long cost;
 
-    public CountOutboxResult(JsonObject json) {
-        super(json);
-        this.sumPart = json.get("sumpart").getAsLong();
-        this.cost = json.get("cost").getAsLong();
+    public CountOutboxResult() {}
+
+    public CountOutboxResult(long sumPart, long cost) {
+        this.sumPart = sumPart;
+        this.cost = cost;
     }
 
-    public Long getSumPart() {
+    public long getSumPart() {
         return sumPart;
     }
 
-    public Long getCost() {
+    public void setSumPart(long sumPart) {
+        this.sumPart = sumPart;
+    }
+
+    public long getCost() {
         return cost;
+    }
+
+    public void setCost(long cost) {
+        this.cost = cost;
     }
 }

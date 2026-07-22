@@ -1,31 +1,37 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kavenegar.sdk.models;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- *
- * @author mohsen
- */
-public class CountPostalCodeResult{
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CountPostalCodeResult {
 
+    @JsonProperty("section")
     private String section;
-    private Long value;
 
-    public CountPostalCodeResult(JsonObject json){
-        this.section = json.get("section").getAsString();
-        this.value = json.get("value").getAsLong();
+    @JsonProperty("value")
+    private long value;
+
+    public CountPostalCodeResult() {}
+
+    public CountPostalCodeResult(String section, long value) {
+        this.section = section;
+        this.value = value;
     }
-    
+
     public String getSection() {
-       return section;
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
     }
 
     public long getValue() {
-       return value;
+        return value;
     }
-    
+
+    public void setValue(long value) {
+        this.value = value;
+    }
 }
