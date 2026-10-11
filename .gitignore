@@ -1,2 +1,25 @@
-/.nb-gradle/
-/build/
+# Gradle build outputs and cache
+.gradle/
+build/
+
+# IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.nb-gradle/
+.nb-gradle-properties
+
+# Compiled class files
+*.class
+bin/
+out/
+
+# Temporary and local test files
+lib/
+sources.txt
+
+# OS generated files
+.DS_Store
+Thumbs.db

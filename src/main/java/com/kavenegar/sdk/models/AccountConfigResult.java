@@ -1,54 +1,76 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kavenegar.sdk.models;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @author Kave
- */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountConfigResult {
 
-
+    @JsonProperty("apilogs")
     private String apiLogs;
-    private String dailyReport;
-    private String debugMode;
-    private String defaultSender;
-    private String resendFailed;
-    private int minCreditAlarm;
 
-    public AccountConfigResult(JsonObject json) {
-        this.apiLogs = json.get("apilogs").getAsString();
-        this.dailyReport = json.get("dailyreport").getAsString();
-        this.debugMode = json.get("debugmode").getAsString();
-        this.defaultSender = json.get("DefaultSender").getAsString();
-        this.resendFailed = json.get("resendfailed").getAsString();
-        this.minCreditAlarm = json.get("Mincreditalarm").getAsInt();
-    }
+    @JsonProperty("dailyreport")
+    private String dailyReport;
+
+    @JsonProperty("debugmode")
+    private String debugMode;
+
+    @JsonProperty("defaultsender")
+    private String defaultSender;
+
+    @JsonProperty("mincreditalarm")
+    private String minCreditAlarm;
+
+    @JsonProperty("resendfailed")
+    private String resendFailed;
+
+    public AccountConfigResult() {}
 
     public String getApiLogs() {
         return apiLogs;
+    }
+
+    public void setApiLogs(String apiLogs) {
+        this.apiLogs = apiLogs;
     }
 
     public String getDailyReport() {
         return dailyReport;
     }
 
+    public void setDailyReport(String dailyReport) {
+        this.dailyReport = dailyReport;
+    }
+
     public String getDebugMode() {
         return debugMode;
+    }
+
+    public void setDebugMode(String debugMode) {
+        this.debugMode = debugMode;
     }
 
     public String getDefaultSender() {
         return defaultSender;
     }
 
+    public void setDefaultSender(String defaultSender) {
+        this.defaultSender = defaultSender;
+    }
+
+    public String getMinCreditAlarm() {
+        return minCreditAlarm;
+    }
+
+    public void setMinCreditAlarm(String minCreditAlarm) {
+        this.minCreditAlarm = minCreditAlarm;
+    }
+
     public String getResendFailed() {
         return resendFailed;
     }
 
-    public int getMinCreditAlarm() {
-        return minCreditAlarm;
+    public void setResendFailed(String resendFailed) {
+        this.resendFailed = resendFailed;
     }
 }

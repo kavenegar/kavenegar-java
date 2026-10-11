@@ -1,35 +1,46 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kavenegar.sdk.enums;
 
-/**
- *
- * @author mohsen
- */
-public enum MessageType {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
+public enum MessageType {
+    FLASH(0),
+    MOBILE_MEMORY(1),
+    SIM_MEMORY(2),
+    APP_MEMORY(3),
+
+    // Legacy Aliases
     Flash(0),
     MobileMemory(1),
     SimMemory(2),
     AppMemory(3);
+
     private final int value;
 
-    private MessageType(int type) {
-        this.value = type;
+    MessageType(int value) {
+        this.value = value;
     }
 
+    @JsonValue
     public int getValue() {
         return value;
     }
 
-    public static MessageType valueOf(int type) {
-        for (MessageType code : MessageType.values()) {
-            if (type == code.getValue()) {
-                return code;
+    public int getCode() {
+        return value;
+    }
+
+    @JsonCreator
+    public static MessageType fromValue(int value) {
+        for (MessageType type : MessageType.values()) {
+            if (type.value == value) {
+                return type;
             }
         }
-        return null;
+        return MOBILE_MEMORY;
+    }
+
+    public static MessageType valueOf(int value) {
+        return fromValue(value);
     }
 }

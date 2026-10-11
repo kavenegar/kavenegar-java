@@ -1,35 +1,49 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kavenegar.sdk.models;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @author mohsen
- */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CountInboxResult {
 
-    private Long startDate;
-    private Long endDate;
-    private  Long sumCount;
+    @JsonProperty("startdate")
+    private long startDate;
 
-    public CountInboxResult(JsonObject json) {
-        this.startDate = json.get("startdate").getAsLong();
-        this.endDate = json.get("enddate").getAsLong();
-        this.sumCount = json.get("sumcount").getAsLong();
+    @JsonProperty("enddate")
+    private long endDate;
+
+    @JsonProperty("sumcount")
+    private long sumCount;
+
+    public CountInboxResult() {}
+
+    public CountInboxResult(long startDate, long endDate, long sumCount) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.sumCount = sumCount;
     }
 
-    public Long getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public Long getEndDate() {
+    public void setStartDate(long startDate) {
+        this.startDate = startDate;
+    }
+
+    public long getEndDate() {
         return endDate;
     }
 
-    public Long getSumCount() {
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
+    }
+
+    public long getSumCount() {
         return sumCount;
+    }
+
+    public void setSumCount(long sumCount) {
+        this.sumCount = sumCount;
     }
 }

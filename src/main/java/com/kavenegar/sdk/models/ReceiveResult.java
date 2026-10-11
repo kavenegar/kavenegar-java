@@ -1,49 +1,73 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kavenegar.sdk.models;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @author mohsen
- */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReceiveResult {
 
-    private Long messageId;
+    @JsonProperty("messageid")
+    private long messageId;
+
+    @JsonProperty("message")
     private String message;
+
+    @JsonProperty("sender")
     private String sender;
+
+    @JsonProperty("receptor")
     private String receptor;
-    private Long date;
 
+    @JsonProperty("date")
+    private long date;
 
-    public ReceiveResult(JsonObject json) {
-        this.messageId = json.get("messageid").getAsLong();
-        this.date = json.get("date").getAsLong();
-        this.message = json.get("message").getAsString();
-        this.sender = json.get("sender").getAsString();
-        this.receptor = (json.get("receptor").getAsString());
+    public ReceiveResult() {}
+
+    public ReceiveResult(long messageId, String message, String sender, String receptor, long date) {
+        this.messageId = messageId;
+        this.message = message;
+        this.sender = sender;
+        this.receptor = receptor;
+        this.date = date;
     }
 
-
-    public Long getMessageId() {
+    public long getMessageId() {
         return messageId;
+    }
+
+    public void setMessageId(long messageId) {
+        this.messageId = messageId;
     }
 
     public String getMessage() {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getSender() {
         return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public String getReceptor() {
         return receptor;
     }
 
-    public Long getDate() {
+    public void setReceptor(String receptor) {
+        this.receptor = receptor;
+    }
+
+    public long getDate() {
         return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
     }
 }

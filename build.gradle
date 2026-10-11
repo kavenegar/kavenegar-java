@@ -1,24 +1,37 @@
-group 'com.kavenegar'
-version '1.0-SNAPSHOT'
+plugins {
+    id 'java-library'
+    id 'idea'
+}
 
-apply plugin: 'java'
+group = 'com.kavenegar'
+version = '2.0.0'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-    // https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java
-    compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
-// https://mvnrepository.com/artifact/com.google.code.gson/gson
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.1'
 
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.2'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
+}
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 
+tasks.named('test') {
+    useJUnitPlatform()
 }

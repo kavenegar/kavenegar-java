@@ -1,35 +1,49 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kavenegar.sdk.models;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @author mohsen
- */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountInfoResult {
 
-    private  Long remainCredit;
-    private Long expireDate;
+    @JsonProperty("remaincredit")
+    private long remainCredit;
+
+    @JsonProperty("expiredate")
+    private long expireDate;
+
+    @JsonProperty("type")
     private String type;
 
-    public AccountInfoResult(JsonObject json){
-        this.remainCredit = json.get("remaincredit").getAsLong();
-        this.expireDate = json.get("expiredate").getAsLong();
-        this.type = json.get("type").getAsString();
+    public AccountInfoResult() {}
+
+    public AccountInfoResult(long remainCredit, long expireDate, String type) {
+        this.remainCredit = remainCredit;
+        this.expireDate = expireDate;
+        this.type = type;
     }
 
-    public Long getRemainCredit() {
+    public long getRemainCredit() {
         return remainCredit;
     }
 
-    public Long getExpireDate() {
+    public void setRemainCredit(long remainCredit) {
+        this.remainCredit = remainCredit;
+    }
+
+    public long getExpireDate() {
         return expireDate;
+    }
+
+    public void setExpireDate(long expireDate) {
+        this.expireDate = expireDate;
     }
 
     public String getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

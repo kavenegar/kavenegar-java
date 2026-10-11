@@ -1,23 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kavenegar.sdk.excepctions;
 
-/**
- *
- * @author mohsen
- */
-public class HttpException extends BaseException {
+public class HttpException extends KavenegarHttpException {
 
-    private final int code;
-
-    public HttpException(String message, int code) {
-        super(message);
-        this.code = code;
+    public HttpException(String message, int statusCode) {
+        super(message, statusCode);
     }
 
-    public int getCode() {
-        return code;
+    public HttpException(String message, Integer statusCode, Throwable cause) {
+        super(message, statusCode, cause);
     }
 }
