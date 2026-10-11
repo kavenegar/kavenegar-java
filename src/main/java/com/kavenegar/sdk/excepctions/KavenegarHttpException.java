@@ -17,4 +17,8 @@ public class KavenegarHttpException extends KavenegarException {
     public Integer getStatusCode() {
         return statusCode;
     }
+
+    public int getCode() {
+        return statusCode != null ? statusCode : 0;
+    }
 }

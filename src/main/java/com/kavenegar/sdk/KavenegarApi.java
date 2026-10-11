@@ -6,6 +6,7 @@ import com.kavenegar.sdk.models.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface KavenegarApi {
@@ -38,6 +39,26 @@ public interface KavenegarApi {
     CompletableFuture<List<SendResult>> sendAsync(String sender, List<String> receptors, String message, Date date, List<String> localIds, String tag, String text, String hide, String localMessageId, String policy, String mediaId);
     List<SendResult> send(String sender, List<String> receptors, String message, MessageType type, Date date, List<String> localIds, String tag, String text, String hide, String localMessageId, String policy, String mediaId);
 
+    default CompletableFuture<List<SendResult>> sendAsync(String sender, List<String> receptors, String message, MessageType type, Date date, String tag, String text, String hide, String localMessageId, String policy, String mediaId) {
+        return sendAsync(SendRequest.builder()
+                .sender(sender)
+                .receptors(receptors)
+                .message(message)
+                .type(type)
+                .date(date != null ? date.toInstant() : null)
+                .tag(tag)
+                .text(text)
+                .hide(hide)
+                .localMessageId(localMessageId)
+                .policy(policy)
+                .mediaId(mediaId)
+                .build());
+    }
+
+    default List<SendResult> send(String sender, List<String> receptors, String message, MessageType type, Date date, String tag, String text, String hide, String localMessageId, String policy, String mediaId) {
+        return send( sender, receptors, message, type, date, null, tag, text, hide, localMessageId, policy, mediaId);
+    }
+
     CompletableFuture<List<SendResult>> sendArrayAsync(SendArrayRequest request);
     List<SendResult> sendArray(SendArrayRequest request);
 
@@ -65,17 +86,32 @@ public interface KavenegarApi {
     CompletableFuture<StatusResult> getStatusAsync(String messageId);
     StatusResult getStatus(String messageId);
 
+    default CompletableFuture<List<StatusResult>> statusAsync(List<String> messageIds) { return getStatusAsync(messageIds); }
+    default List<StatusResult> status(List<String> messageIds) { return getStatus(messageIds); }
+    default CompletableFuture<StatusResult> statusAsync(String messageId) { return getStatusAsync(messageId); }
+    default StatusResult status(String messageId) { return getStatus(messageId); }
+
     CompletableFuture<List<StatusLocalMessageIdResult>> getStatusByLocalMessageIdAsync(List<String> messageIds);
     List<StatusLocalMessageIdResult> getStatusByLocalMessageId(List<String> messageIds);
 
     CompletableFuture<StatusLocalMessageIdResult> getStatusByLocalMessageIdAsync(String messageId);
     StatusLocalMessageIdResult getStatusByLocalMessageId(String messageId);
 
+    default CompletableFuture<List<StatusLocalMessageIdResult>> statusLocalMessageIdAsync(List<String> messageIds) { return getStatusByLocalMessageIdAsync(messageIds); }
+    default List<StatusLocalMessageIdResult> statusLocalMessageId(List<String> messageIds) { return getStatusByLocalMessageId(messageIds); }
+    default CompletableFuture<StatusLocalMessageIdResult> statusLocalMessageIdAsync(String messageId) { return getStatusByLocalMessageIdAsync(messageId); }
+    default StatusLocalMessageIdResult statusLocalMessageId(String messageId) { return getStatusByLocalMessageId(messageId); }
+
     CompletableFuture<List<SendResult>> selectMessagesAsync(List<String> messageIds);
     List<SendResult> selectMessages(List<String> messageIds);
 
     CompletableFuture<SendResult> selectMessagesAsync(String messageId);
     SendResult selectMessages(String messageId);
+
+    default CompletableFuture<List<SendResult>> selectAsync(List<String> messageIds) { return selectMessagesAsync(messageIds); }
+    default List<SendResult> select(List<String> messageIds) { return selectMessages(messageIds); }
+    default CompletableFuture<SendResult> selectAsync(String messageId) { return selectMessagesAsync(messageId); }
+    default SendResult select(String messageId) { return selectMessages(messageId); }
 
     CompletableFuture<List<SendResult>> selectOutboxAsync(Date startDate);
     List<SendResult> selectOutbox(Date startDate);
@@ -92,6 +128,11 @@ public interface KavenegarApi {
     CompletableFuture<List<SendResult>> getLatestOutboxAsync(long pageSize, String sender);
     List<SendResult> getLatestOutbox(long pageSize, String sender);
 
+    default CompletableFuture<List<SendResult>> latestOutboxAsync(long pageSize) { return getLatestOutboxAsync(pageSize); }
+    default List<SendResult> latestOutbox(long pageSize) { return getLatestOutbox(pageSize); }
+    default CompletableFuture<List<SendResult>> latestOutboxAsync(long pageSize, String sender) { return getLatestOutboxAsync(pageSize, sender); }
+    default List<SendResult> latestOutbox(long pageSize, String sender) { return getLatestOutbox(pageSize, sender); }
+
     CompletableFuture<CountOutboxResult> countOutboxAsync(Date startDate);
     CountOutboxResult countOutbox(Date startDate);
 
@@ -107,8 +148,16 @@ public interface KavenegarApi {
     CompletableFuture<StatusResult> cancelMessagesAsync(String messageId);
     StatusResult cancelMessages(String messageId);
 
+    default CompletableFuture<List<StatusResult>> cancelAsync(List<String> ids) { return cancelMessagesAsync(ids); }
+    default List<StatusResult> cancel(List<String> ids) { return cancelMessages(ids); }
+    default CompletableFuture<StatusResult> cancelAsync(String messageId) { return cancelMessagesAsync(messageId); }
+    default StatusResult cancel(String messageId) { return cancelMessages(messageId); }
+
     CompletableFuture<List<ReceiveResult>> receiveMessagesAsync(String line, int isRead);
     List<ReceiveResult> receiveMessages(String line, int isRead);
+
+    default CompletableFuture<List<ReceiveResult>> receiveAsync(String line, int isRead) { return receiveMessagesAsync(line, isRead); }
+    default List<ReceiveResult> receive(String line, int isRead) { return receiveMessages(line, isRead); }
 
     CompletableFuture<CountInboxResult> countInboxAsync(Date startDate, String lineNumber);
     CountInboxResult countInbox(Date startDate, String lineNumber);
@@ -128,26 +177,49 @@ public interface KavenegarApi {
     CompletableFuture<List<StatusResult>> getStatusByReceptorAsync(String receptor, Date startDate, Date endDate);
     List<StatusResult> getStatusByReceptor(String receptor, Date startDate, Date endDate);
 
+    default CompletableFuture<List<StatusResult>> statusByReceptorAsync(String receptor) { return getStatusByReceptorAsync(receptor); }
+    default List<StatusResult> statusByReceptor(String receptor) { return getStatusByReceptor(receptor); }
+    default CompletableFuture<List<StatusResult>> statusByReceptorAsync(String receptor, Date startDate) { return getStatusByReceptorAsync(receptor, startDate); }
+    default List<StatusResult> statusByReceptor(String receptor, Date startDate) { return getStatusByReceptor(receptor, startDate); }
+    default CompletableFuture<List<StatusResult>> statusByReceptorAsync(String receptor, Date startDate, Date endDate) { return getStatusByReceptorAsync(receptor, startDate, endDate); }
+    default List<StatusResult> statusByReceptor(String receptor, Date startDate, Date endDate) { return getStatusByReceptor(receptor, startDate, endDate); }
+
     CompletableFuture<List<ReceiveResult>> getUnreadMessagesAsync(String lineNumber, int isRead);
     List<ReceiveResult> getUnreadMessages(String lineNumber, int isRead);
+
+    default CompletableFuture<List<ReceiveResult>> unreadsAsync(String lineNumber, int isRead) { return getUnreadMessagesAsync(lineNumber, isRead); }
+    default List<ReceiveResult> unreads(String lineNumber, int isRead) { return getUnreadMessages(lineNumber, isRead); }
 
     CompletableFuture<InboxPagedResult> getInboxPageAsync(String lineNumber, Integer isRead, Date startDate, Date endDate, Integer pageNumber);
     InboxPagedResult getInboxPage(String lineNumber, Integer isRead, Date startDate, Date endDate, Integer pageNumber);
 
+    default CompletableFuture<InboxPagedResult> inboxPagedAsync(String lineNumber, Integer isRead, Date startDate, Date endDate, Integer pageNumber) { return getInboxPageAsync(lineNumber, isRead, startDate, endDate, pageNumber); }
+    default InboxPagedResult inboxPaged(String lineNumber, Integer isRead, Date startDate, Date endDate, Integer pageNumber) { return getInboxPage(lineNumber, isRead, startDate, endDate, pageNumber); }
+
     CompletableFuture<List<GroupSendReportResult>> getGroupSendReportAsync(Date startDate, Date endDate);
     List<GroupSendReportResult> getGroupSendReport(Date startDate, Date endDate);
+
+    default CompletableFuture<List<GroupSendReportResult>> groupSendReportAsync(Date startDate, Date endDate) { return getGroupSendReportAsync(startDate, endDate); }
+    default List<GroupSendReportResult> groupSendReport(Date startDate, Date endDate) { return getGroupSendReport(startDate, endDate); }
 
     // --- ACCOUNT ---
     CompletableFuture<AccountInfoResult> getAccountInfoAsync();
     AccountInfoResult getAccountInfo();
 
+    default CompletableFuture<AccountInfoResult> accountInfoAsync() { return getAccountInfoAsync(); }
+    default AccountInfoResult accountInfo() { return getAccountInfo(); }
+
     CompletableFuture<AccountConfigResult> configureAccountAsync(String apiLogs, String dailyReport, String debugMode, String defaultSender, Integer minCreditAlarm, String resendFailed);
     AccountConfigResult configureAccount(String apiLogs, String dailyReport, String debugMode, String defaultSender, Integer minCreditAlarm, String resendFailed);
 
-    // --- VERIFY ---
-    CompletableFuture<SendResult> verifyLookupAsync(VerifyLookupRequest request);
-    SendResult verifyLookup(VerifyLookupRequest request);
+    default CompletableFuture<AccountConfigResult> accountConfigAsync(String apiLogs, String dailyReport, String debugMode, String defaultSender, Integer minCreditAlarm, String resendFailed) {
+        return configureAccountAsync(apiLogs, dailyReport, debugMode, defaultSender, minCreditAlarm, resendFailed);
+    }
+    default AccountConfigResult accountConfig(String apiLogs, String dailyReport, String debugMode, String defaultSender, Integer minCreditAlarm, String resendFailed) {
+        return configureAccount(apiLogs, dailyReport, debugMode, defaultSender, minCreditAlarm, resendFailed);
+    }
 
+    // --- VERIFY ---
     CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String template);
     SendResult verifyLookup(String receptor, String token, String template);
 
@@ -181,14 +253,8 @@ public interface KavenegarApi {
     CompletableFuture<CloneTemplateResult> cloneTemplateAsync(Integer sourceTemplateId, String sourceTemplateName, String newTemplateName, String apiKey, String localId);
     CloneTemplateResult cloneTemplate(Integer sourceTemplateId, String sourceTemplateName, String newTemplateName, String apiKey, String localId);
 
-    CompletableFuture<TemplateInfoResult> addTemplateAsync(TemplateRequest request);
-    TemplateInfoResult addTemplate(TemplateRequest request);
-
     CompletableFuture<TemplateInfoResult> addTemplateAsync(TemplateDto dto);
     TemplateInfoResult addTemplate(TemplateDto dto);
-
-    CompletableFuture<TemplateInfoResult> updateTemplateAsync(int templateId, TemplateRequest request);
-    TemplateInfoResult updateTemplate(int templateId, TemplateRequest request);
 
     CompletableFuture<TemplateInfoResult> updateTemplateAsync(int templateId, TemplateDto dto);
     TemplateInfoResult updateTemplate(int templateId, TemplateDto dto);
@@ -200,9 +266,6 @@ public interface KavenegarApi {
     String deleteTemplate(int id, String apiKey, String localId);
 
     // --- CALL ---
-    CompletableFuture<List<SendResult>> makeTtsCallAsync(TtsRequest request);
-    List<SendResult> makeTtsCall(TtsRequest request);
-
     CompletableFuture<SendResult> makeTtsCallAsync(String message, String receptor);
     SendResult makeTtsCall(String message, String receptor);
 
@@ -212,12 +275,28 @@ public interface KavenegarApi {
     CompletableFuture<List<SendResult>> makeTtsCallAsync(String message, List<String> receptors, Date date, List<String> localIds, String tag);
     List<SendResult> makeTtsCall(String message, List<String> receptors, Date date, List<String> localIds, String tag);
 
-    // --- SUBCLIENT ---
-    CompletableFuture<SubClientResult> addClientAsync(SubClientRequest request);
-    SubClientResult addClient(SubClientRequest request);
+    default CompletableFuture<List<SendResult>> makeTtsCallAsync(String message, List<String> receptors, Date date, List<String> localIds) {
+        return makeTtsCallAsync(message, receptors, date, localIds, null);
+    }
+    default List<SendResult> makeTtsCall(String message, List<String> receptors, Date date, List<String> localIds) {
+        return makeTtsCall(message, receptors, date, localIds, null);
+    }
 
-    CompletableFuture<SubClientResult> updateClientAsync(SubClientRequest request);
-    SubClientResult updateClient(SubClientRequest request);
+    default CompletableFuture<SendResult> callMakeTTSAsync(String message, String receptor) { return makeTtsCallAsync(message, receptor); }
+    default SendResult callMakeTTS(String message, String receptor) { return makeTtsCall(message, receptor); }
+    default CompletableFuture<List<SendResult>> callMakeTTSAsync(String message, List<String> receptors) { return makeTtsCallAsync(message, receptors); }
+    default List<SendResult> callMakeTTS(String message, List<String> receptors) { return makeTtsCall(message, receptors); }
+    default CompletableFuture<List<SendResult>> callMakeTTSAsync(String message, List<String> receptors, Date date, List<String> localIds) { return makeTtsCallAsync(message, receptors, date, localIds, null); }
+    default List<SendResult> callMakeTTS(String message, List<String> receptors, Date date, List<String> localIds) { return makeTtsCall(message, receptors, date, localIds, null); }
+    default CompletableFuture<List<SendResult>> callMakeTTSAsync(String message, List<String> receptors, Date date, List<String> localIds, String tag) { return makeTtsCallAsync(message, receptors, date, localIds, tag); }
+    default List<SendResult> callMakeTTS(String message, List<String> receptors, Date date, List<String> localIds, String tag) { return makeTtsCall(message, receptors, date, localIds, tag); }
+
+    // --- SUBCLIENT ---
+    CompletableFuture<SubClientResult> addClientAsync(SubClientDto dto);
+    SubClientResult addClient(SubClientDto dto);
+
+    CompletableFuture<SubClientResult> updateClientAsync(SubClientDto dto);
+    SubClientResult updateClient(SubClientDto dto);
 
     CompletableFuture<List<SubClientResult>> listClientsAsync();
     List<SubClientResult> listClients();
@@ -263,8 +342,22 @@ public interface KavenegarApi {
     CompletableFuture<MediaResult> getMediaAsync(String id, String fileName);
     MediaResult getMedia(String id, String fileName);
 
+    default CompletableFuture<MediaResult> getMediaAsync(UUID id, String fileName) {
+        return getMediaAsync(id != null ? id.toString() : null, fileName);
+    }
+    default MediaResult getMedia(UUID id, String fileName) {
+        return getMedia(id != null ? id.toString() : null, fileName);
+    }
+
     CompletableFuture<MediaDeleteResult> deleteMediaAsync(String id);
     MediaDeleteResult deleteMedia(String id);
+
+    default CompletableFuture<MediaDeleteResult> deleteMediaAsync(UUID id) {
+        return deleteMediaAsync(id != null ? id.toString() : null);
+    }
+    default MediaDeleteResult deleteMedia(UUID id) {
+        return deleteMedia(id != null ? id.toString() : null);
+    }
 
     // --- CONTACT & GROUP ---
     CompletableFuture<List<ContactResult>> addContactAsync(int groupId, String number, String title, String birthdate, String email, String tags);

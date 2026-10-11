@@ -1,6 +1,6 @@
 package com.kavenegar.sdk;
 
-import com.kavenegar.sdk.models.SubClientRequest;
+import com.kavenegar.sdk.models.SubClientDto;
 import com.kavenegar.sdk.models.SubClientResult;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ public class SubClientTest {
     @Test
     public void test_AddClient() {
         String clientName = "Add Test " + UUID.randomUUID().toString().substring(0, 8);
-        SubClientRequest req = SubClientRequest.builder()
+        SubClientDto req = SubClientDto.builder()
                 .fullName(clientName)
                 .userName("user_" + UUID.randomUUID().toString().substring(0, 8))
                 .password("Password123!")
@@ -55,7 +55,7 @@ public class SubClientTest {
     @Test
     public void test_AddClient_Async() {
         String clientName = "Add Test " + UUID.randomUUID().toString().substring(0, 8);
-        SubClientRequest req = SubClientRequest.builder()
+        SubClientDto req = SubClientDto.builder()
                 .fullName(clientName)
                 .userName("user_" + UUID.randomUUID().toString().substring(0, 8))
                 .password("Password123!")
@@ -107,7 +107,7 @@ public class SubClientTest {
 
     @Test
     public void test_UpdateClient() {
-        SubClientRequest req = SubClientRequest.builder()
+        SubClientDto req = SubClientDto.builder()
                 .apiKey(apiKey)
                 .fullName("Updated SubClient")
                 .build();
@@ -117,7 +117,7 @@ public class SubClientTest {
 
     @Test
     public void test_UpdateClient_Async() {
-        SubClientRequest req = SubClientRequest.builder()
+        SubClientDto req = SubClientDto.builder()
                 .apiKey(apiKey)
                 .fullName("Updated SubClient")
                 .build();

@@ -1,5 +1,6 @@
 package com.kavenegar.sdk.models;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -42,7 +43,8 @@ public class SubClientResult {
     @JsonProperty("status")
     private String status;
 
-    @JsonProperty("passwordhashed")
+    @JsonProperty("pwdhashed")
+    @JsonAlias({"passwordhashed", "pwdhashed"})
     private String passwordHashed;
 
     @JsonProperty("mobile")
@@ -51,7 +53,8 @@ public class SubClientResult {
     @JsonProperty("localid")
     private String localId;
 
-    @JsonProperty("minimumallowedcredit")
+    @JsonProperty("mininumallowedcredit")
+    @JsonAlias({"minimumallowedcredit", "mininumallowedcredit"})
     private int minimumAllowedCredit;
 
     public SubClientResult() {}
@@ -160,6 +163,14 @@ public class SubClientResult {
         this.passwordHashed = passwordHashed;
     }
 
+    public String getPwdHashed() {
+        return passwordHashed;
+    }
+
+    public void setPwdHashed(String pwdHashed) {
+        this.passwordHashed = pwdHashed;
+    }
+
     public String getMobile() {
         return mobile;
     }
@@ -182,5 +193,13 @@ public class SubClientResult {
 
     public void setMinimumAllowedCredit(int minimumAllowedCredit) {
         this.minimumAllowedCredit = minimumAllowedCredit;
+    }
+
+    public int getMininumAllowedCredit() {
+        return minimumAllowedCredit;
+    }
+
+    public void setMininumAllowedCredit(int mininumAllowedCredit) {
+        this.minimumAllowedCredit = mininumAllowedCredit;
     }
 }

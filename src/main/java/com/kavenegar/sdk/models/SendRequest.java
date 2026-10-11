@@ -15,7 +15,9 @@ public class SendRequest {
     private String tag;
     private String text;
     private Integer hide;
+    private String hideRaw;
     private String localId;
+    private String localMessageId;
     private String policy;
     private String mediaId;
 
@@ -30,6 +32,9 @@ public class SendRequest {
 
     public List<String> getReceptors() { return receptors; }
     public void setReceptors(List<String> receptors) { this.receptors = receptors; }
+
+    public List<String> getReceptor() { return receptors; }
+    public void setReceptor(List<String> receptor) { this.receptors = receptor; }
 
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
@@ -50,10 +55,28 @@ public class SendRequest {
     public void setText(String text) { this.text = text; }
 
     public Integer getHide() { return hide; }
-    public void setHide(Integer hide) { this.hide = hide; }
+    public void setHide(Integer hide) {
+        this.hide = hide;
+        this.hideRaw = hide != null ? String.valueOf(hide) : null;
+    }
+    public void setHide(String hide) {
+        this.hideRaw = hide;
+        try {
+            this.hide = hide != null ? Integer.valueOf(hide) : null;
+        } catch (NumberFormatException ignored) {
+            this.hide = null;
+        }
+    }
+    public String getHideAsString() {
+        if (hideRaw != null) return hideRaw;
+        return hide != null ? String.valueOf(hide) : null;
+    }
 
     public String getLocalId() { return localId; }
     public void setLocalId(String localId) { this.localId = localId; }
+
+    public String getLocalMessageId() { return localMessageId; }
+    public void setLocalMessageId(String localMessageId) { this.localMessageId = localMessageId; }
 
     public String getPolicy() { return policy; }
     public void setPolicy(String policy) { this.policy = policy; }
@@ -66,6 +89,7 @@ public class SendRequest {
 
         public Builder sender(String sender) { request.setSender(sender); return this; }
         public Builder receptors(List<String> receptors) { request.setReceptors(receptors); return this; }
+        public Builder receptor(List<String> receptor) { request.setReceptors(receptor); return this; }
         public Builder receptor(String receptor) { request.getReceptors().add(receptor); return this; }
         public Builder message(String message) { request.setMessage(message); return this; }
         public Builder type(MessageType type) { request.setType(type); return this; }
@@ -74,7 +98,9 @@ public class SendRequest {
         public Builder tag(String tag) { request.setTag(tag); return this; }
         public Builder text(String text) { request.setText(text); return this; }
         public Builder hide(Integer hide) { request.setHide(hide); return this; }
+        public Builder hide(String hide) { request.setHide(hide); return this; }
         public Builder localId(String localId) { request.setLocalId(localId); return this; }
+        public Builder localMessageId(String localMessageId) { request.setLocalMessageId(localMessageId); return this; }
         public Builder policy(String policy) { request.setPolicy(policy); return this; }
         public Builder mediaId(String mediaId) { request.setMediaId(mediaId); return this; }
 

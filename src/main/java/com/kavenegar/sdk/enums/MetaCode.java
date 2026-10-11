@@ -21,7 +21,17 @@ public enum MetaCode {
     INVALID_DATE(114),
     MESSAGE_TOO_LARGE(115),
     RECIPIENT_COUNT_MISMATCH(116),
-    UNKNOWN(-1);
+    UNKNOWN(-1),
+
+    // .NET Aliases
+    INVALID_RECP(110),
+    InvalidRecp(110),
+    RECP_IS_TOO_LARGE(113),
+    RecpIsTooLarge(113),
+    MSG_IS_TOO_LARGE(115),
+    MsgIsTooLarge(115),
+    RECP_NOT_EQUAL_WITH_MESSAGE(116),
+    RecpNotEqualWithMessage(116);
 
     private final int getValue;
 

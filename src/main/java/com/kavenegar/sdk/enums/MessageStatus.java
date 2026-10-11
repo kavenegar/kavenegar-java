@@ -16,10 +16,12 @@ public enum MessageStatus {
     INCORRECT(100),
     UNKNOWN(-1),
 
-    // Legacy Aliases
+    // Legacy & .NET Aliases
     Queued(1),
+    Scheduled(2),
     Schulded(2),
     SentToCenter(4),
+    SentToCarrier(5),
     SentToBlackList(5),
     Delivered(10),
     Undelivered(11),

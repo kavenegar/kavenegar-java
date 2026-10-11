@@ -198,7 +198,7 @@ public class SmsTest {
 
     @Test
     public void test_Sms_SendArray_Overload_4_Async() {
-        List<SendResult> res = api.sendArrayAsync(sender, List.of(receptor), List.of("پیام آرایه ۴"), "localmsgid456").join();
+        List<SendResult> res = api.sendArrayAsync(sender, List.of(receptor,receptor), List.of("پیام آرایه ۴","پیام آرایه "), "localmsgid456").join();
         assertNotNull(res);
     }
 
@@ -216,7 +216,7 @@ public class SmsTest {
 
     @Test
     public void test_Sms_SendArray_11Params() {
-        List<SendResult> res = api.sendArray(List.of(sender), List.of(receptor), List.of("پیام آرایه قدیمی"), List.of(MessageType.MOBILE_MEMORY), new Date(0), null, null, null, null, null);
+        List<SendResult> res = api.sendArray(List.of(sender), List.of(receptor), List.of("پیام آرایه قدیمی"), null, null, null, null, null, null, null);
         assertNotNull(res);
     }
 

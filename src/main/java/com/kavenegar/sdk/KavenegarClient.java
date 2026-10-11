@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kavenegar.sdk.enums.*;
+import com.kavenegar.sdk.excepctions.ApiException;
+import com.kavenegar.sdk.excepctions.HttpException;
 import com.kavenegar.sdk.excepctions.KavenegarApiException;
 import com.kavenegar.sdk.excepctions.KavenegarHttpException;
 import com.kavenegar.sdk.models.*;
@@ -26,12 +28,44 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
-public class KavenegarClient implements KavenegarApi {
+public class KavenegarClient implements IKavenegarApi {
 
     private final KavenegarClientOptions options;
+    private String apiKey;
 
     public KavenegarClient(String apiKey) {
         this(KavenegarClientOptions.builder().apiKey(apiKey).build());
+    }
+
+    public KavenegarClient(String apiKey, HttpClient httpClient) {
+        this(KavenegarClientOptions.builder().apiKey(apiKey).httpClient(httpClient).build());
+    }
+
+    public KavenegarClient(HttpClient httpClient) {
+        this.options = KavenegarClientOptions.builder().apiKey("").httpClient(httpClient).build();
+        this.apiKey = "";
+    }
+
+    public KavenegarClient(KavenegarOptions options) {
+        this(options != null ? options.toClientOptions() : KavenegarClientOptions.builder().build());
+    }
+
+    public KavenegarClient(KavenegarOptions options, HttpClient httpClient) {
+        this(KavenegarClientOptions.builder()
+                .apiKey(options != null ? options.getApiKey() : null)
+                .baseUrl(options != null && options.getBaseUrl() != null ? options.getBaseUrl() : "https://api.kavenegar.com")
+                .httpClient(httpClient)
+                .build());
+    }
+
+    public KavenegarClient(KavenegarClientOptions options, HttpClient httpClient) {
+        this(KavenegarClientOptions.builder()
+                .apiKey(options.getApiKey())
+                .baseUrl(options.getBaseUrl())
+                .timeout(options.getTimeout())
+                .objectMapper(options.getObjectMapper())
+                .httpClient(httpClient)
+                .build());
     }
 
     public KavenegarClient(KavenegarClientOptions options) {
@@ -39,6 +73,7 @@ public class KavenegarClient implements KavenegarApi {
             throw new IllegalArgumentException("API key must not be null or empty.");
         }
         this.options = options;
+        this.apiKey = options.getApiKey();
     }
 
     public static KavenegarClientOptions.Builder builder() {
@@ -46,7 +81,11 @@ public class KavenegarClient implements KavenegarApi {
     }
 
     public String getApiKey() {
-        return options.getApiKey();
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     private <T> T joinUnwrapped(CompletableFuture<T> future) {
@@ -95,7 +134,7 @@ public class KavenegarClient implements KavenegarApi {
     private <T> CompletableFuture<ApiEnvelope<T>> executeRequestEnvelope(String httpMethod, String folder, String action, Map<String, String> formParams, TypeReference<ApiEnvelope<T>> typeRef) {
         String baseUrl = String.format("%s/v1/%s/%s/%s.json",
                 options.getBaseUrl().replaceAll("/+$", ""),
-                options.getApiKey(),
+                getApiKey(),
                 folder,
                 action);
 
@@ -154,7 +193,7 @@ public class KavenegarClient implements KavenegarApi {
     private <T> CompletableFuture<T> executeMultipart(String folder, String action, String fieldName, String filename, byte[] fileBytes, Map<String, String> extraParams, TypeReference<ApiEnvelope<T>> typeRef) {
         String url = String.format("%s/v1/%s/%s/%s.json",
                 options.getBaseUrl().replaceAll("/+$", ""),
-                options.getApiKey(),
+                getApiKey(),
                 folder,
                 action);
 
@@ -181,7 +220,7 @@ public class KavenegarClient implements KavenegarApi {
                 if (envelope != null && envelope.getReturnHeader() != null) {
                     int status = envelope.getReturnHeader().getStatus();
                     if (status != 200) {
-                        throw new KavenegarApiException(envelope.getReturnHeader().getMessage(), status);
+                        throw new ApiException(envelope.getReturnHeader().getMessage(), status);
                     }
                     return envelope;
                 }
@@ -189,16 +228,16 @@ public class KavenegarClient implements KavenegarApi {
                 throw e;
             } catch (IOException e) {
                 if (response.statusCode() == 200) {
-                    throw new KavenegarHttpException("Failed to parse JSON response: " + e.getMessage() + " | Body: " + body, response.statusCode(), e);
+                    throw new HttpException("Failed to parse JSON response: " + e.getMessage() + " | Body: " + body, response.statusCode(), e);
                 }
             }
         }
 
         if (response.statusCode() != 200) {
-            throw new KavenegarHttpException("HTTP error status code: " + response.statusCode(), response.statusCode());
+            throw new HttpException("HTTP error status code: " + response.statusCode(), response.statusCode());
         }
 
-        throw new KavenegarHttpException("Empty or invalid response body: " + body, response.statusCode());
+        throw new HttpException("Empty or invalid response body: " + body, response.statusCode());
     }
 
     private byte[] createMultipartBody(String boundary, String fieldName, String filename, byte[] fileBytes, Map<String, String> extraParams) {
@@ -263,6 +302,11 @@ public class KavenegarClient implements KavenegarApi {
         }).collect(Collectors.joining(","));
     }
 
+    private List<String> trimSendArrayValues(List<String> values) {
+        if (values == null) return null;
+        return values.stream().map(v -> v != null ? v.trim() : null).collect(Collectors.toList());
+    }
+
     // --- SMS API IMPL ---
 
     @Override
@@ -275,9 +319,10 @@ public class KavenegarClient implements KavenegarApi {
         if (request.getDate() != null) params.put("date", String.valueOf(UnixTime.toEpochSeconds(request.getDate())));
         if (request.getLocalIds() != null && !request.getLocalIds().isEmpty()) params.put("localid", join(request.getLocalIds()));
         else if (request.getLocalId() != null) params.put("localid", request.getLocalId());
+        if (request.getLocalMessageId() != null) params.put("localmessageid", request.getLocalMessageId());
         if (request.getTag() != null) params.put("tag", request.getTag());
         if (request.getText() != null) params.put("text", request.getText());
-        if (request.getHide() != null) params.put("hide", String.valueOf(request.getHide()));
+        if (request.getHideAsString() != null) params.put("hide", request.getHideAsString());
         if (request.getPolicy() != null) params.put("policy", request.getPolicy());
         if (request.getMediaId() != null) params.put("mediaid", request.getMediaId());
 
@@ -362,11 +407,11 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<List<SendResult>> sendAsync(String sender, List<String> receptors, String message, Date date, List<String> localIds, String tag, String text, String hide, String localMessageId, String policy, String mediaId) {
-        return sendAsync(SendRequest.builder().sender(sender).receptors(receptors).message(message).date(date != null ? date.toInstant() : null).localIds(localIds).tag(tag).text(text).hide(hide != null ? Integer.parseInt(hide) : null).localId(localMessageId).policy(policy).mediaId(mediaId).build());
+        return sendAsync(SendRequest.builder().sender(sender).receptors(receptors).message(message).date(date != null ? date.toInstant() : null).localIds(localIds).tag(tag).text(text).hide(hide).localMessageId(localMessageId).policy(policy).mediaId(mediaId).build());
     }
 
     private CompletableFuture<List<SendResult>> sendAsync(String sender, List<String> receptors, String message, MessageType type, Date date, List<String> localIds, String tag, String text, String hide, String localMessageId, String policy, String mediaId) {
-        return sendAsync(SendRequest.builder().sender(sender).receptors(receptors).message(message).type(type).date(date != null ? date.toInstant() : null).localIds(localIds).tag(tag).text(text).hide(hide != null ? Integer.parseInt(hide) : null).localId(localMessageId).policy(policy).mediaId(mediaId).build());
+        return sendAsync(SendRequest.builder().sender(sender).receptors(receptors).message(message).type(type).date(date != null ? date.toInstant() : null).localIds(localIds).tag(tag).text(text).hide(hide).localMessageId(localMessageId).policy(policy).mediaId(mediaId).build());
     }
 
     @Override
@@ -379,10 +424,10 @@ public class KavenegarClient implements KavenegarApi {
         Map<String, String> params = new HashMap<>();
         try {
             if (request.getSenders() != null && !request.getSenders().isEmpty()) {
-                params.put("sender", options.getObjectMapper().writeValueAsString(request.getSenders()));
+                params.put("sender", options.getObjectMapper().writeValueAsString(trimSendArrayValues(request.getSenders())));
             }
             if (request.getReceptors() != null && !request.getReceptors().isEmpty()) {
-                params.put("receptor", options.getObjectMapper().writeValueAsString(request.getReceptors()));
+                params.put("receptor", options.getObjectMapper().writeValueAsString(trimSendArrayValues(request.getReceptors())));
             }
             if (request.getMessages() != null && !request.getMessages().isEmpty()) {
                 params.put("message", options.getObjectMapper().writeValueAsString(request.getMessages()));
@@ -402,7 +447,7 @@ public class KavenegarClient implements KavenegarApi {
             params.put("localmessageids", join(request.getLocalIds()));
         }
         if (request.getTag() != null) params.put("tag", request.getTag());
-        if (request.getHide() != null) params.put("hide", String.valueOf(request.getHide()));
+        if (request.getHideAsString() != null) params.put("hide", request.getHideAsString());
         if (request.getPolicy() != null) params.put("policy", request.getPolicy());
         if (request.getMediaId() != null) params.put("mediaid", request.getMediaId());
 
@@ -478,12 +523,12 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<List<SendResult>> sendArrayAsync(List<String> senders, List<String> receptors, List<String> messages, Date date, List<String> localMessageIds, String tag, String hide, String policy, String mediaId) {
-        return sendArrayAsync(SendArrayRequest.builder().senders(senders).receptors(receptors).messages(messages).date(date != null ? date.toInstant() : null).localIds(localMessageIds).tag(tag).hide(hide != null ? Integer.parseInt(hide) : null).policy(policy).mediaId(mediaId).build());
+        return sendArrayAsync(SendArrayRequest.builder().senders(senders).receptors(receptors).messages(messages).date(date != null ? date.toInstant() : null).localIds(localMessageIds).tag(tag).hide(hide).policy(policy).mediaId(mediaId).build());
     }
 
     @Override
     public List<SendResult> sendArray(List<String> senders, List<String> receptors, List<String> messages, List<MessageType> types, Date date, List<String> localMessageIds, String tag, String hide, String policy, String mediaId) {
-        return joinUnwrapped(sendArrayAsync(SendArrayRequest.builder().senders(senders).receptors(receptors).messages(messages).types(types).date(date != null ? date.toInstant() : null).localIds(localMessageIds).tag(tag).hide(hide != null ? Integer.parseInt(hide) : null).policy(policy).mediaId(mediaId).build()));
+        return joinUnwrapped(sendArrayAsync(SendArrayRequest.builder().senders(senders).receptors(receptors).messages(messages).types(types).date(date != null ? date.toInstant() : null).localIds(localMessageIds).tag(tag).hide(hide).policy(policy).mediaId(mediaId).build()));
     }
 
     @Override
@@ -757,28 +802,30 @@ public class KavenegarClient implements KavenegarApi {
     // --- Verification ---
 
     @Override
-    public CompletableFuture<SendResult> verifyLookupAsync(VerifyLookupRequest request) {
+    public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String token2, String token3, String token10, String token20, String template, VerifyLookupType type, String tag) {
         Map<String, String> params = new HashMap<>();
-        params.put("receptor", request.getReceptor());
-        params.put("token", request.getToken());
-        if (request.getToken2() != null) params.put("token2", request.getToken2());
-        if (request.getToken3() != null) params.put("token3", request.getToken3());
-        if (request.getToken10() != null) params.put("token10", request.getToken10());
-        if (request.getToken20() != null) params.put("token20", request.getToken20());
-        params.put("template", request.getTemplate());
-        if (request.getType() != null) params.put("type", String.valueOf(request.getType().getValue()));
-        if (request.getTag() != null) params.put("tag", request.getTag());
+        params.put("receptor", receptor);
+        params.put("token", token);
+        if (token2 != null) params.put("token2", token2);
+        if (token3 != null) params.put("token3", token3);
+        if (token10 != null) params.put("token10", token10);
+        if (token20 != null) params.put("token20", token20);
+        params.put("template", template);
+        if (type != null) params.put("type", String.valueOf(type.getValue()));
+        if (tag != null) params.put("tag", tag);
 
         return executePost("verify", "lookup", params, new TypeReference<ApiEnvelope<List<SendResult>>>() {})
                 .thenApply(list -> (list == null || list.isEmpty()) ? null : list.get(0));
     }
 
     @Override
-    public SendResult verifyLookup(VerifyLookupRequest request) { return joinUnwrapped(verifyLookupAsync(request)); }
+    public SendResult verifyLookup(String receptor, String token, String token2, String token3, String token10, String token20, String template, VerifyLookupType type, String tag) {
+        return joinUnwrapped(verifyLookupAsync(receptor, token, token2, token3, token10, token20, template, type, tag));
+    }
 
     @Override
     public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String template) {
-        return verifyLookupAsync(VerifyLookupRequest.builder().receptor(receptor).token(token).template(template).build());
+        return verifyLookupAsync(receptor, token, null, null, null, null, template, VerifyLookupType.SMS, null);
     }
 
     @Override
@@ -786,7 +833,7 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String template, VerifyLookupType type) {
-        return verifyLookupAsync(VerifyLookupRequest.builder().receptor(receptor).token(token).template(template).type(type).build());
+        return verifyLookupAsync(receptor, token, null, null, null, null, template, type, null);
     }
 
     @Override
@@ -794,7 +841,7 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String token2, String template) {
-        return verifyLookupAsync(VerifyLookupRequest.builder().receptor(receptor).token(token).token2(token2).template(template).build());
+        return verifyLookupAsync(receptor, token, token2, null, null, null, template, VerifyLookupType.SMS, null);
     }
 
     @Override
@@ -802,7 +849,7 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String token2, String template, VerifyLookupType type) {
-        return verifyLookupAsync(VerifyLookupRequest.builder().receptor(receptor).token(token).token2(token2).template(template).type(type).build());
+        return verifyLookupAsync(receptor, token, token2, null, null, null, template, type, null);
     }
 
     @Override
@@ -810,7 +857,7 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String token2, String token3, String template) {
-        return verifyLookupAsync(VerifyLookupRequest.builder().receptor(receptor).token(token).token2(token2).token3(token3).template(template).build());
+        return verifyLookupAsync(receptor, token, token2, token3, null, null, template, VerifyLookupType.SMS, null);
     }
 
     @Override
@@ -818,7 +865,7 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String token2, String token3, String token10, String template) {
-        return verifyLookupAsync(VerifyLookupRequest.builder().receptor(receptor).token(token).token2(token2).token3(token3).token10(token10).template(template).build());
+        return verifyLookupAsync(receptor, token, token2, token3, token10, null, template, VerifyLookupType.SMS, null);
     }
 
     @Override
@@ -826,7 +873,7 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String token2, String token3, String template, VerifyLookupType type) {
-        return verifyLookupAsync(VerifyLookupRequest.builder().receptor(receptor).token(token).token2(token2).token3(token3).template(template).type(type).build());
+        return verifyLookupAsync(receptor, token, token2, token3, null, null, template, type, null);
     }
 
     @Override
@@ -834,19 +881,11 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String token2, String token3, String token10, String template, VerifyLookupType type) {
-        return verifyLookupAsync(VerifyLookupRequest.builder().receptor(receptor).token(token).token2(token2).token3(token3).token10(token10).template(template).type(type).build());
+        return verifyLookupAsync(receptor, token, token2, token3, token10, null, template, type, null);
     }
 
     @Override
     public SendResult verifyLookup(String receptor, String token, String token2, String token3, String token10, String template, VerifyLookupType type) { return joinUnwrapped(verifyLookupAsync(receptor, token, token2, token3, token10, template, type)); }
-
-    @Override
-    public CompletableFuture<SendResult> verifyLookupAsync(String receptor, String token, String token2, String token3, String token10, String token20, String template, VerifyLookupType type, String tag) {
-        return verifyLookupAsync(VerifyLookupRequest.builder().receptor(receptor).token(token).token2(token2).token3(token3).token10(token10).token20(token20).template(template).type(type).tag(tag).build());
-    }
-
-    @Override
-    public SendResult verifyLookup(String receptor, String token, String token2, String token3, String token10, String token20, String template, VerifyLookupType type, String tag) { return joinUnwrapped(verifyLookupAsync(receptor, token, token2, token3, token10, token20, template, type, tag)); }
 
     @Override
     public CompletableFuture<List<TemplateResult>> listTemplatesAsync(String apiKey, String localId, Integer page) {
@@ -875,15 +914,6 @@ public class KavenegarClient implements KavenegarApi {
     public CloneTemplateResult cloneTemplate(Integer sourceTemplateId, String sourceTemplateName, String newTemplateName, String apiKey, String localId) { return joinUnwrapped(cloneTemplateAsync(sourceTemplateId, sourceTemplateName, newTemplateName, apiKey, localId)); }
 
     @Override
-    public CompletableFuture<TemplateInfoResult> addTemplateAsync(TemplateRequest request) {
-        Map<String, String> params = buildTemplateParams(request);
-        return executePost("verify", "addtemplate", params, new TypeReference<>() {});
-    }
-
-    @Override
-    public TemplateInfoResult addTemplate(TemplateRequest request) { return joinUnwrapped(addTemplateAsync(request)); }
-
-    @Override
     public CompletableFuture<TemplateInfoResult> addTemplateAsync(TemplateDto dto) {
         Map<String, String> params = buildTemplateDtoParams(dto);
         return executePost("verify", "addtemplate", params, new TypeReference<>() {});
@@ -891,16 +921,6 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public TemplateInfoResult addTemplate(TemplateDto dto) { return joinUnwrapped(addTemplateAsync(dto)); }
-
-    @Override
-    public CompletableFuture<TemplateInfoResult> updateTemplateAsync(int templateId, TemplateRequest request) {
-        Map<String, String> params = buildTemplateParams(request);
-        params.put("templateid", String.valueOf(templateId));
-        return executePost("verify", "updatetemplate", params, new TypeReference<>() {});
-    }
-
-    @Override
-    public TemplateInfoResult updateTemplate(int templateId, TemplateRequest request) { return joinUnwrapped(updateTemplateAsync(templateId, request)); }
 
     @Override
     public CompletableFuture<TemplateInfoResult> updateTemplateAsync(int templateId, TemplateDto dto) {
@@ -911,24 +931,6 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public TemplateInfoResult updateTemplate(int templateId, TemplateDto dto) { return joinUnwrapped(updateTemplateAsync(templateId, dto)); }
-
-    private Map<String, String> buildTemplateParams(TemplateRequest request) {
-        Map<String, String> params = new HashMap<>();
-        if (request.getSourceType() != null) params.put("sourcetype", String.valueOf(request.getSourceType().getValue()));
-        if (request.getSendMethod() != null) params.put("sendmethod", String.valueOf(request.getSendMethod().getValue()));
-        if (request.getFallbackMethod() != null) params.put("fallbackmethod", String.valueOf(request.getFallbackMethod().getValue()));
-        if (request.getPrimaryLineNumber() != null) params.put("primarylinenumber", request.getPrimaryLineNumber());
-        if (request.getSecondaryLineNumber() != null) params.put("secondarylinenumber", request.getSecondaryLineNumber());
-        if (request.getSwitchTtl() != null) params.put("switchttl", String.valueOf(request.getSwitchTtl()));
-        if (request.getSourceUrl() != null) params.put("sourceurl", request.getSourceUrl());
-        if (request.getSourceName() != null) params.put("sourcename", request.getSourceName());
-        if (request.getTemplateName() != null) params.put("name", request.getTemplateName());
-        if (request.getTextMessage() != null) params.put("textmessage", request.getTextMessage());
-        if (request.getVoiceMessage() != null) params.put("voicemessage", request.getVoiceMessage());
-        if (request.getLocalId() != null) params.put("localid", request.getLocalId());
-        if (request.getApiKey() != null) params.put("apikey", request.getApiKey());
-        return params;
-    }
 
     private Map<String, String> buildTemplateDtoParams(TemplateDto dto) {
         Map<String, String> params = new HashMap<>();
@@ -976,21 +978,6 @@ public class KavenegarClient implements KavenegarApi {
     // --- Voice Calls (TTS) ---
 
     @Override
-    public CompletableFuture<List<SendResult>> makeTtsCallAsync(TtsRequest request) {
-        Map<String, String> params = new HashMap<>();
-        params.put("message", request.getMessage());
-        params.put("receptor", join(request.getReceptors()));
-        if (request.getDate() != null) params.put("date", String.valueOf(UnixTime.toEpochSeconds(request.getDate())));
-        if (request.getLocalIds() != null && !request.getLocalIds().isEmpty()) params.put("localid", join(request.getLocalIds()));
-        if (request.getTag() != null) params.put("tag", request.getTag());
-
-        return executePost("call", "maketts", params, new TypeReference<>() {});
-    }
-
-    @Override
-    public List<SendResult> makeTtsCall(TtsRequest request) { return joinUnwrapped(makeTtsCallAsync(request)); }
-
-    @Override
     public CompletableFuture<SendResult> makeTtsCallAsync(String message, String receptor) {
         return makeTtsCallAsync(message, List.of(receptor)).thenApply(list -> list == null || list.isEmpty() ? null : list.get(0));
     }
@@ -1000,7 +987,7 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<List<SendResult>> makeTtsCallAsync(String message, List<String> receptors) {
-        return makeTtsCallAsync(TtsRequest.builder().message(message).receptors(receptors).build());
+        return makeTtsCallAsync(message, receptors, null, null, null);
     }
 
     @Override
@@ -1008,7 +995,14 @@ public class KavenegarClient implements KavenegarApi {
 
     @Override
     public CompletableFuture<List<SendResult>> makeTtsCallAsync(String message, List<String> receptors, Date date, List<String> localIds, String tag) {
-        return makeTtsCallAsync(TtsRequest.builder().message(message).receptors(receptors).date(date != null ? date.toInstant() : null).localIds(localIds).tag(tag).build());
+        Map<String, String> params = new HashMap<>();
+        params.put("message", message);
+        params.put("receptor", join(receptors));
+        if (date != null) params.put("date", String.valueOf(UnixTime.toEpochSeconds(date)));
+        if (localIds != null && !localIds.isEmpty()) params.put("localid", join(localIds));
+        if (tag != null) params.put("tag", tag);
+
+        return executePost("call", "maketts", params, new TypeReference<>() {});
     }
 
     @Override
@@ -1017,39 +1011,41 @@ public class KavenegarClient implements KavenegarApi {
     // --- SubClient ---
 
     @Override
-    public CompletableFuture<SubClientResult> addClientAsync(SubClientRequest request) {
-        Map<String, String> params = buildSubClientParams(request);
+    public CompletableFuture<SubClientResult> addClientAsync(SubClientDto dto) {
+        Map<String, String> params = buildSubClientParams(dto);
         return executePost("client", "add", params, new TypeReference<>() {});
     }
 
     @Override
-    public SubClientResult addClient(SubClientRequest request) { return joinUnwrapped(addClientAsync(request)); }
+    public SubClientResult addClient(SubClientDto dto) { return joinUnwrapped(addClientAsync(dto)); }
 
     @Override
-    public CompletableFuture<SubClientResult> updateClientAsync(SubClientRequest request) {
-        Map<String, String> params = buildSubClientParams(request);
+    public CompletableFuture<SubClientResult> updateClientAsync(SubClientDto dto) {
+        Map<String, String> params = buildSubClientParams(dto);
         return executePost("client", "update", params, new TypeReference<>() {});
     }
 
     @Override
-    public SubClientResult updateClient(SubClientRequest request) { return joinUnwrapped(updateClientAsync(request)); }
+    public SubClientResult updateClient(SubClientDto dto) { return joinUnwrapped(updateClientAsync(dto)); }
 
-    private Map<String, String> buildSubClientParams(SubClientRequest request) {
+    private Map<String, String> buildSubClientParams(SubClientDto dto) {
         Map<String, String> params = new HashMap<>();
-        if (request.getApiKey() != null) params.put("apikey", request.getApiKey());
-        if (request.getIp() != null) params.put("ip", request.getIp());
-        if (request.getLocalId() != null) params.put("localid", request.getLocalId());
-        if (request.getCredit() != null) params.put("credit", String.valueOf(request.getCredit()));
-        if (request.getUserName() != null) params.put("username", request.getUserName());
-        if (request.getPassword() != null) params.put("password", request.getPassword());
-        if (request.getFullName() != null) params.put("fullname", request.getFullName());
-        if (request.getPlanId() != null) params.put("planid", request.getPlanId());
-        if (request.getMobile() != null) params.put("mobile", request.getMobile());
-        if (request.getStatus() != null) params.put("status", String.valueOf(request.getStatus()));
-        if (request.getMinimumAllowedCredit() != null) params.put("minimumallowedcredit", String.valueOf(request.getMinimumAllowedCredit()));
-        if (request.getLines() != null) params.put("lines", request.getLines());
-        if (request.getAllowParentLine() != null) params.put("allowparentline", String.valueOf(request.getAllowParentLine()));
-        if (request.getExpireDate() != null) params.put("expiredate", String.valueOf(request.getExpireDate()));
+        if (dto.getApiKey() != null) params.put("apikey", dto.getApiKey());
+        if (dto.getIp() != null) params.put("ip", dto.getIp());
+        if (dto.getLocalId() != null) params.put("localid", dto.getLocalId());
+        if (dto.getCredit() != null) params.put("credit", String.valueOf(dto.getCredit()));
+        if (dto.getUserName() != null) params.put("username", dto.getUserName());
+        if (dto.getPassword() != null) params.put("password", dto.getPassword());
+        if (dto.getFullName() != null) params.put("fullname", dto.getFullName());
+        if (dto.getPlanId() != null) params.put("planid", String.valueOf(dto.getPlanId()));
+        if (dto.getMobile() != null) params.put("mobile", dto.getMobile());
+        if (dto.getStatus() != null) params.put("status", dto.getStatus());
+        if (dto.getMininumAllowedCredit() != null) params.put("mininumallowedcredit", String.valueOf(dto.getMininumAllowedCredit()));
+        if (dto.getLines() != null) params.put("lines", dto.getLines());
+        if (dto.getCanUseParentLines() != null) params.put("canuseparentlines", dto.getCanUseParentLines() ? "1" : "0");
+        if (dto.getExpireDate() != null) params.put("expiredate", dto.getExpireDate());
+        if (dto.getEnableLink() != null) params.put("enablelink", dto.getEnableLink() ? "1" : "0");
+        if (dto.getCanCharge() != null) params.put("cancharge", dto.getCanCharge() ? "1" : "0");
         return params;
     }
 
@@ -1168,7 +1164,7 @@ public class KavenegarClient implements KavenegarApi {
             return uploadMediaAsync(fileName, fileBytes);
         } catch (IOException e) {
             CompletableFuture<MediaResult> future = new CompletableFuture<>();
-            future.completeExceptionally(new KavenegarHttpException("Failed to read file for upload: " + e.getMessage(), 0, e));
+            future.completeExceptionally(new HttpException("Failed to read file for upload: " + e.getMessage(), 0, e));
             return future;
         }
     }
@@ -1276,8 +1272,12 @@ public class KavenegarClient implements KavenegarApi {
     public CompletableFuture<List<GroupResult>> editGroupAsync(int groupId, String groupName, Byte status, String tag) {
         Map<String, String> params = new HashMap<>();
         params.put("groupid", String.valueOf(groupId));
-        if (groupName != null) params.put("name", groupName);
-        if (status != null) params.put("status", String.valueOf(status));
+        if (groupName != null) params.put("groupname", groupName);
+        if (status != null) {
+            params.put("status", String.valueOf(status));
+        } else {
+            params.put("status", "1");
+        }
         if (tag != null) params.put("tag", tag);
         return executePost("group", "editgroup", params, new TypeReference<>() {});
     }

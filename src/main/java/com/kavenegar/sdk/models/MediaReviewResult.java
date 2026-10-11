@@ -42,6 +42,14 @@ public class MediaReviewResult {
         this.statusDescription = statusDescription;
     }
 
+    public String getStatusDesc() {
+        return statusDescription;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDescription = statusDesc;
+    }
+
     public int getReason() {
         return reason;
     }
@@ -60,5 +68,13 @@ public class MediaReviewResult {
 
     public void setReasonDescription(String reasonDescription) {
         this.reasonDescription = reasonDescription;
+    }
+
+    public String getReasonDesc() {
+        return reasonDescription;
+    }
+
+    public void setReasonDesc(String reasonDesc) {
+        this.reasonDescription = reasonDesc;
     }
 }

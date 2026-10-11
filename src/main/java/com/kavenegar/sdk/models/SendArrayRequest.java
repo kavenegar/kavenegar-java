@@ -14,6 +14,7 @@ public class SendArrayRequest {
     private List<String> localIds = new ArrayList<>();
     private String tag;
     private Integer hide;
+    private String hideRaw;
     private String policy;
     private String mediaId;
 
@@ -41,11 +42,29 @@ public class SendArrayRequest {
     public List<String> getLocalIds() { return localIds; }
     public void setLocalIds(List<String> localIds) { this.localIds = localIds; }
 
+    public List<String> getLocalMessageIds() { return localIds; }
+    public void setLocalMessageIds(List<String> localMessageIds) { this.localIds = localMessageIds; }
+
     public String getTag() { return tag; }
     public void setTag(String tag) { this.tag = tag; }
 
     public Integer getHide() { return hide; }
-    public void setHide(Integer hide) { this.hide = hide; }
+    public void setHide(Integer hide) {
+        this.hide = hide;
+        this.hideRaw = hide != null ? String.valueOf(hide) : null;
+    }
+    public void setHide(String hide) {
+        this.hideRaw = hide;
+        try {
+            this.hide = hide != null ? Integer.valueOf(hide) : null;
+        } catch (NumberFormatException ignored) {
+            this.hide = null;
+        }
+    }
+    public String getHideAsString() {
+        if (hideRaw != null) return hideRaw;
+        return hide != null ? String.valueOf(hide) : null;
+    }
 
     public String getPolicy() { return policy; }
     public void setPolicy(String policy) { this.policy = policy; }
@@ -62,8 +81,10 @@ public class SendArrayRequest {
         public Builder types(List<MessageType> types) { request.setTypes(types); return this; }
         public Builder date(Instant date) { request.setDate(date); return this; }
         public Builder localIds(List<String> localIds) { request.setLocalIds(localIds); return this; }
+        public Builder localMessageIds(List<String> localMessageIds) { request.setLocalMessageIds(localMessageIds); return this; }
         public Builder tag(String tag) { request.setTag(tag); return this; }
         public Builder hide(Integer hide) { request.setHide(hide); return this; }
+        public Builder hide(String hide) { request.setHide(hide); return this; }
         public Builder policy(String policy) { request.setPolicy(policy); return this; }
         public Builder mediaId(String mediaId) { request.setMediaId(mediaId); return this; }
 

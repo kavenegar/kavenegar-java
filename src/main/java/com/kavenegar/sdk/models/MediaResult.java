@@ -34,6 +34,9 @@ public class MediaResult {
     @JsonProperty("status")
     private int status;
 
+    @JsonProperty("review")
+    private MediaReviewResult review;
+
     public MediaResult() {}
 
     public String getId() {
@@ -84,6 +87,14 @@ public class MediaResult {
         this.statusDescription = statusDescription;
     }
 
+    public String getStatusDesc() {
+        return statusDescription;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDescription = statusDesc;
+    }
+
     public int getSize() {
         return size;
     }
@@ -110,5 +121,13 @@ public class MediaResult {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public MediaReviewResult getReview() {
+        return review;
+    }
+
+    public void setReview(MediaReviewResult review) {
+        this.review = review;
     }
 }

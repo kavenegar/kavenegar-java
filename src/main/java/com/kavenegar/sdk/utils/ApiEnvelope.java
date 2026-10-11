@@ -1,5 +1,6 @@
 package com.kavenegar.sdk.utils;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 public class ApiEnvelope<T> {
 
     @JsonProperty("return")
+    @JsonAlias({"return", "result"})
     private ReturnHeader returnHeader;
 
     @JsonProperty("entries")
