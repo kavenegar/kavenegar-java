@@ -89,7 +89,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.kavenegar:kavenegar-java:v2.0.3'
+    implementation 'com.github.kavenegar:kavenegar-java:v2.0.0'
 }
 ```
 
@@ -109,7 +109,7 @@ dependencies {
 <dependency>
     <groupId>com.github.kavenegar</groupId>
     <artifactId>kavenegar-java</artifactId>
-    <version>v2.0.3</version>
+    <version>v2.0.0</version>
 </dependency>
 ```
 

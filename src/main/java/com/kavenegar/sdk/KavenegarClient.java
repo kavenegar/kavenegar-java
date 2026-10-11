@@ -154,7 +154,7 @@ public class KavenegarClient implements IKavenegarApi {
 
         HttpRequest.Builder reqBuilder = HttpRequest.newBuilder()
                 .timeout(options.getTimeout())
-                .header("User-Agent", "Kavenegar-Java-SDK/1.0.0");
+                .header("User-Agent", "Kavenegar-Java-SDK/2.0.0");
 
         if ("GET".equalsIgnoreCase(httpMethod)) {
             String fullUrl = baseUrl + (queryOrBody.length() > 0 ? "?" + queryOrBody : "");
@@ -204,7 +204,7 @@ public class KavenegarClient implements IKavenegarApi {
                 .uri(URI.create(url))
                 .timeout(options.getTimeout())
                 .header("Content-Type", "multipart/form-data; boundary=" + boundary)
-                .header("User-Agent", "Kavenegar-Java-SDK/1.0.0")
+                .header("User-Agent", "Kavenegar-Java-SDK/2.0.0")
                 .POST(HttpRequest.BodyPublishers.ofByteArray(multipartBody))
                 .build();
 
